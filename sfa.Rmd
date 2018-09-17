@@ -38,9 +38,11 @@ ggplot(data = efficiencies_df, aes(year,efficiency,color = country)) +
   ggtitle("Technical efficiencies by countries")
 ```
 
+
 ```{r}
 # explain efficiencies
 panel_efficiency_factor <- left_join(panel_efficiency_factor,efficiencies_df,by = c('year','country'))
+
 panel_efficiency_factor <- pdata.frame(panel_efficiency_factor,c('country','year'))
 
 equation <- efficiency ~ lngovshare + lntradeshare + lnreer
@@ -51,4 +53,31 @@ phtest(model_fixed,model_random)
 summary(model_fixed)
 
 ```
+
+
+```{r}
+panel_efficiency_factor$year <- as.integer(panel_efficiency_factor$year)
+panel_efficiency_factor$govshare = exp(panel_efficiency_factor$lngovshare) 
+panel_efficiency_factor$tradeshare = exp(panel_efficiency_factor$lntradeshare)
+panel_efficiency_factor$reer = exp(panel_efficiency_factor$lnreer)
+
+ggplot(data = panel_efficiency_factor, aes(year,govshare, color = country)) + 
+  geom_line() + 
+  ggtitle("Government expenditure share per real GDP by countries")
+```
+
+```{r}
+ggplot(data = panel_efficiency_factor, aes(year,tradeshare, color = country)) + 
+  geom_line() + 
+  ggtitle("Trade share per real GDP by countries")
+```
+
+```{r}
+ggplot(data = panel_efficiency_factor, aes(year,reer, color = country)) + 
+  geom_line() + 
+  ggtitle("Real effective exchange rate by countries")
+```
+
+
+
 
